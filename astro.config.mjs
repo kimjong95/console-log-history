@@ -28,14 +28,5 @@ export default defineConfig({
 			subsets: ['latin'],
 			fallbacks: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
 		},
-		// invest 제목. 한글 세리프.
-		{
-			provider: fontProviders.google(),
-			name: 'Noto Serif KR',
-			cssVariable: '--font-serif',
-			weights: [500, 700],
-			subsets: ['latin', 'korean'],
-			fallbacks: ['ui-serif', 'Apple SD Gothic Neo', 'Georgia', 'serif'],
-		},
 	],
 });

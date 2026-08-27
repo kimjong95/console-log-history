@@ -25,20 +25,22 @@ const posts = await getPublishedPosts(category);
 
 <style>
 	main {
-		width: 720px;
+		width: var(--container-prose);
 	}
 	.section-head {
-		margin-bottom: 2.5rem;
-		padding-bottom: 1.5rem;
-		border-bottom: 2px solid var(--theme-accent);
+		margin-bottom: var(--space-2);
+		padding-bottom: var(--space-1);
+		border-bottom: 1px solid var(--fg);
 	}
 	.section-head h1 {
 		margin: 0;
-		font-family: var(--theme-font-label);
-		font-size: 2rem;
+		color: var(--accent);
+		font-family: var(--font-label);
+		font-size: 1.5em;
 	}
 	.section-head p {
-		margin: 0.5rem 0 0;
-		color: rgb(var(--gray));
+		margin: 8px 0 0;
+		color: var(--muted);
+		font-size: 0.95rem;
 	}
 </style>

@@ -4,8 +4,8 @@ import { CATEGORIES, CATEGORY_KEYS, SITE_TITLE } from '../consts';
 ---
 
 <header>
-	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+	<nav class="ui-text">
+		<a class="brand" href="/">{SITE_TITLE}</a>
 		<div class="internal-links">
 			{CATEGORY_KEYS.map((category) => (
 				<HeaderLink href={`/${category}/`}>{CATEGORIES[category].label}</HeaderLink>
@@ -16,41 +16,36 @@ import { CATEGORIES, CATEGORY_KEYS, SITE_TITLE } from '../consts';
 </header>
 <style>
 	header {
-		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
-	}
-	h2 {
-		margin: 0;
-		/* 사이트명은 섹션 테마와 무관하게 고정한다. */
-		font-family: var(--font-sans);
-		font-size: 1em;
-	}
-
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
+		border-bottom: 1px solid var(--rule);
 	}
 	nav {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 		justify-content: space-between;
+		gap: var(--space-1);
+		max-width: var(--container);
+		margin: 0 auto;
+		padding: var(--space-1);
+		box-sizing: border-box;
+	}
+	/* 사이트명은 섹션 액센트를 물려받지 않는다. 브랜딩은 고정이다. */
+	.brand {
+		color: var(--fg);
+		font-weight: 600;
+		text-decoration: none;
+	}
+	.internal-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-1);
 	}
 	nav a {
-		padding: 1em 0.5em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
+		color: var(--muted);
 		text-decoration: none;
 	}
-	nav a.active {
-		text-decoration: none;
-		border-bottom-color: var(--theme-accent);
-	}
-	@media (max-width: 720px) {
-		.internal-links a {
-			font-size: 0.9em;
-		}
+	nav a:hover,
+	nav :global(a.active) {
+		color: var(--fg);
 	}
 </style>

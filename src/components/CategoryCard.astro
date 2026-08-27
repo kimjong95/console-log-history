@@ -14,48 +14,47 @@ const { category, posts, total } = Astro.props;
 const { label, description } = CATEGORIES[category];
 ---
 
-<!-- data-theme을 카드에 걸어 그 섹션의 색을 미리 보여준다. -->
+<!-- data-theme으로 그 섹션의 액센트만 바뀐다. 배경과 텍스트는 무채색이다. -->
 <section class="card" data-theme={category}>
 	<a class="heading" href={`/${category}/`}>
-		<h2>{label}</h2>
+		<h2 class="label">{label}</h2>
 	</a>
 	<p class="description">{description}</p>
-	<p class="count">글 {total}편</p>
+	<p class="count ui-text">글 {total}편</p>
 	<PostList posts={posts} empty="첫 글을 준비하고 있습니다." />
-	<a class="more" href={`/${category}/`}>전체 보기 →</a>
+	<a class="more ui-text" href={`/${category}/`}>전체 보기 →</a>
 </section>
 
 <style>
 	.card {
 		display: flex;
 		flex-direction: column;
-		padding: 1.75rem;
-		border-radius: 12px;
-		background: var(--theme-surface);
+		padding-top: var(--space-1);
+		border-top: 1px solid var(--fg);
 	}
 	.heading {
 		text-decoration: none;
 	}
-	.card h2 {
+	.label {
 		margin: 0;
-		font-family: var(--theme-font-label);
-		color: var(--theme-accent-dark);
-		font-size: 1.5rem;
+		color: var(--accent);
+		font-family: var(--font-label);
+		font-size: 1.1rem;
 	}
 	.description {
-		margin: 0.5rem 0 0;
-		color: rgb(var(--gray-dark));
+		margin: 8px 0 0;
+		color: var(--fg);
+		font-size: 0.95rem;
+		line-height: 1.6;
 	}
 	.count {
-		margin: 0.25rem 0 1.25rem;
-		color: rgb(var(--gray));
-		font-size: 0.85rem;
+		margin: 4px 0 var(--space-1);
+		color: var(--muted);
 	}
 	.more {
 		margin-top: auto;
-		padding-top: 1.5rem;
-		color: var(--theme-accent-dark);
-		font-size: 0.9rem;
+		padding-top: var(--space-1);
+		color: var(--accent);
 		text-decoration: none;
 	}
 	.more:hover {

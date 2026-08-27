@@ -13,14 +13,14 @@ const { posts, empty = '아직 글이 없습니다.' } = Astro.props;
 
 {
 	posts.length === 0 ? (
-		<p class="empty">{empty}</p>
+		<p class="empty ui-text">{empty}</p>
 	) : (
 		<ul class="post-list">
 			{posts.map((post) => (
 				<li>
 					<a href={postPath(post)}>
 						<span class="title">{post.data.title}</span>
-						<span class="date">
+						<span class="date ui-text">
 							<FormattedDate date={post.data.pubDate} />
 						</span>
 					</a>
@@ -37,39 +37,39 @@ const { posts, empty = '아직 글이 없습니다.' } = Astro.props;
 		padding: 0;
 		list-style: none;
 	}
-	.post-list li + li {
-		margin-top: 1.5rem;
-		padding-top: 1.5rem;
-		border-top: 1px solid rgb(var(--gray-light));
+	.post-list li {
+		margin: 0;
+		padding: var(--space-1) 0;
+		border-bottom: 1px solid var(--rule);
 	}
 	.post-list a {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: baseline;
 		justify-content: space-between;
-		gap: 0.25rem 1rem;
+		gap: 4px var(--space-1);
+		color: var(--fg);
 		text-decoration: none;
 	}
 	.title {
-		color: rgb(var(--black));
-		font-family: var(--theme-font-heading);
-		font-size: 1.2rem;
-		letter-spacing: var(--theme-heading-spacing);
+		font-size: 1.05rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
 	}
 	a:hover .title {
-		color: var(--theme-accent);
+		color: var(--accent);
 	}
 	.date {
-		color: rgb(var(--gray));
-		font-size: 0.85rem;
+		color: var(--muted);
 		white-space: nowrap;
 	}
 	.description {
-		margin: 0.25rem 0 0;
-		color: rgb(var(--gray));
-		font-size: 0.95rem;
+		margin: 4px 0 0;
+		color: var(--muted);
+		font-size: 0.9rem;
+		line-height: 1.6;
 	}
 	.empty {
-		color: rgb(var(--gray));
+		color: var(--muted);
 	}
 </style>

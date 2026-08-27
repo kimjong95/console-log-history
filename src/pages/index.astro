@@ -41,35 +41,37 @@ const rest = allPosts.filter((post) => !previewed.has(post.id));
 
 <style>
 	main {
-		width: 960px;
+		width: var(--container);
 	}
 	.hero {
-		margin-bottom: 3rem;
-		text-align: center;
+		margin-bottom: var(--space-4);
 	}
 	.hero h1 {
 		margin: 0;
-		font-size: 2.5rem;
+		font-size: 2.25em;
 	}
 	.hero p {
-		margin: 0.5rem 0 0;
-		color: rgb(var(--gray));
+		margin: 8px 0 0;
+		color: var(--muted);
 	}
 	.doors {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		gap: 1.5rem;
+		/* 카테고리 수에 맞춰 열이 늘어난다. 고정 열이면 카테고리를 늘릴 때 여기도 고쳐야 한다. */
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		gap: var(--space-2);
 	}
 	.rest {
-		margin-top: 4rem;
+		margin-top: var(--space-4);
+		padding-top: var(--space-1);
+		border-top: 1px solid var(--fg);
 	}
 	.rest h2 {
-		margin-bottom: 1.5rem;
-		font-size: 1.2rem;
+		margin-bottom: var(--space-1);
+		font-size: 1.1rem;
 	}
-	@media (max-width: 720px) {
+	@media (max-width: 768px) {
 		.hero h1 {
-			font-size: 1.9rem;
+			font-size: 1.75em;
 		}
 	}
 </style>

@@ -4,28 +4,28 @@ import { SITE_TITLE } from '../consts';
 const today = new Date();
 ---
 
-<footer>
+<footer class="ui-text">
 	<p class="copyright">&copy; {today.getFullYear()} {SITE_TITLE}</p>
 	<p class="notice">
-		투자 카테고리의 글은 개인 의견이며 투자 권유가 아닙니다.
-		<a href="/about/">&nbsp;자세히</a>
+		투자 카테고리의 글은 개인 의견이며 투자 권유가 아닙니다. <a href="/about/">자세히</a>
 	</p>
 </footer>
 <style>
 	footer {
-		padding: 2em 1em 3em;
-		color: rgb(var(--gray));
-		text-align: center;
-		font-size: 0.85rem;
-		line-height: 1.6;
+		max-width: var(--container);
+		margin: var(--space-4) auto 0;
+		padding: var(--space-1) var(--space-1) var(--space-3);
+		box-sizing: border-box;
+		border-top: 1px solid var(--rule);
+		color: var(--muted);
 	}
 	footer p {
 		margin: 0;
 	}
 	.notice {
-		margin-top: 0.35rem;
+		margin-top: 4px;
 	}
 	.notice a {
-		color: rgb(var(--gray));
+		color: var(--muted);
 	}
 </style>
