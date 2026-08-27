@@ -41,11 +41,23 @@ git config user.email   # 51505451+kimjong95@users.noreply.github.com 이어야 
 |---|---|
 | 도메인 | `consoleloghistory.blog` (가비아, 연 65,000원, 2026-08-27 등록) |
 | DNS | 가비아 네임서버 유지. apex A → `216.198.79.1`, `www` CNAME → `cname.vercel-dns.com` |
-| 호스팅 | Vercel |
+| 호스팅 | Vercel. 이 저장소의 `main`에 푸시하면 자동 배포된다 (GitHub 연동) |
 | SSL | Let's Encrypt 자동 발급·갱신 |
 | 저장소 | https://github.com/kimjong95/console-log-history (public) |
 
-**미해결:** 도메인이 아직 이전 Vercel 프로젝트 `dev-blog`(Next.js)에 붙어 있다. 이 저장소로 옮겨야 하며, 그 과정에서 SSL 재발급 대기가 한 번 더 발생한다. `www` 서브도메인은 아직 인증서가 없다.
+apex는 서비스 중이며 최신 커밋이 반영된다. `dev-blog`(Next.js)에서 도메인을 옮기는 작업은 끝났다.
+
+**미해결:** `www` 인증서. DNS와 라우팅은 이미 정상이고(`https://www` → 307 → apex), Vercel 프로젝트에도 등록돼 있다. 다만 현재 인증서(2026-08-26 22:25 UTC 발급)의 SAN에 apex만 들어 있어, 브라우저가 `www`로 처음 접속하면 리다이렉트 전에 인증서 경고에서 막힌다. Vercel의 재발급을 기다리는 것 외에 할 일은 없다.
+
+확인 방법:
+
+```bash
+echo | openssl s_client -connect www.consoleloghistory.blog:443 \
+  -servername www.consoleloghistory.blog 2>/dev/null \
+  | openssl x509 -noout -ext subjectAltName
+```
+
+SAN에 `DNS:www.consoleloghistory.blog`가 함께 나오면 해결된 것이다.
 
 ## 확정된 결정
 
@@ -93,14 +105,11 @@ vault(`~/Documents/Obsidian Vault`, md 약 175개)는 글감 자산이지만, �
 
 ## 다음 작업
 
-**목표: 데모 글 1편이 Vercel 임시 도메인에서 보이는 상태까지.**
+MVP 발행 경로와 배포는 끝났다. 다음은 글을 쌓는 단계다.
 
-1. `pnpm create astro@latest . --template blog` 로 스캐폴딩, `@astrojs/react` 추가
-2. Content Collections 스키마 정의 — `category: 'dev' | 'invest'`, 투자 글은 면책 필드 필수
-3. dev/invest 데모 글 각 1편 작성 (vault 연동 없이 저장소에서 직접)
-4. 글 목록·상세·카테고리 라우트, RSS·sitemap
-5. 첫 커밋·push (`git config user.email`이 개인 계정인지 확인)
-6. Vercel 새 프로젝트 연결, 임시 도메인으로 배포 확인
-7. `dev-blog`에서 도메인 이전, `www` 포함 SSL 재발급 확인
+1. `www` 인증서 발급 확인 (기다리기만 하면 된다 — 위 인프라 섹션 참고)
+2. 데모 글 2편을 실제 글로 교체하거나 그 위에 이어 쓰기
+3. 글이 쌓이면 스킨 다듬기 → 애드센스 준비 페이지·`ads.txt` → 신청
+4. vault 연동 파이프라인 설계 (발행 전용 폴더 방식이 기본안)
 
-이후(범위 밖): 스킨 분리 → 글 15~25편 축적 → 애드센스 준비 페이지·`ads.txt` → 신청 → vault 연동 파이프라인
+글쓰기를 막는 기술적 과제는 지금 없다. 3·4번은 글이 먼저 쌓인 뒤의 일이다.
