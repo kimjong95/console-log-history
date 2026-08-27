@@ -1,0 +1,64 @@
+---
+import PostList from './PostList.astro';
+import { CATEGORIES, type Category } from '../consts';
+import type { Post } from '../lib/posts';
+
+interface Props {
+	category: Category;
+	/** 미리 보여줄 최신 글. 없으면 카드는 제목과 설명만 보여준다. */
+	posts: Post[];
+	total: number;
+}
+
+const { category, posts, total } = Astro.props;
+const { label, description } = CATEGORIES[category];
+---
+
+<!-- data-theme을 카드에 걸어 그 섹션의 색을 미리 보여준다. -->
+<section class="card" data-theme={category}>
+	<a class="heading" href={`/${category}/`}>
+		<h2>{label}</h2>
+	</a>
+	<p class="description">{description}</p>
+	<p class="count">글 {total}편</p>
+	<PostList posts={posts} empty="첫 글을 준비하고 있습니다." />
+	<a class="more" href={`/${category}/`}>전체 보기 →</a>
+</section>
+
+<style>
+	.card {
+		display: flex;
+		flex-direction: column;
+		padding: 1.75rem;
+		border-radius: 12px;
+		background: var(--theme-surface);
+	}
+	.heading {
+		text-decoration: none;
+	}
+	.card h2 {
+		margin: 0;
+		font-family: var(--theme-font-label);
+		color: var(--theme-accent-dark);
+		font-size: 1.5rem;
+	}
+	.description {
+		margin: 0.5rem 0 0;
+		color: rgb(var(--gray-dark));
+	}
+	.count {
+		margin: 0.25rem 0 1.25rem;
+		color: rgb(var(--gray));
+		font-size: 0.85rem;
+	}
+	.more {
+		margin-top: auto;
+		padding-top: 1.5rem;
+		color: var(--theme-accent-dark);
+		font-size: 0.9rem;
+		text-decoration: none;
+	}
+	.more:hover {
+		text-decoration: underline;
+	}
+</style>

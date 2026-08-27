@@ -1,0 +1,75 @@
+---
+import FormattedDate from './FormattedDate.astro';
+import { postPath, type Post } from '../lib/posts';
+
+interface Props {
+	posts: Post[];
+	/** 글이 하나도 없을 때 대신 보여줄 문구. */
+	empty?: string;
+}
+
+const { posts, empty = '아직 글이 없습니다.' } = Astro.props;
+---
+
+{
+	posts.length === 0 ? (
+		<p class="empty">{empty}</p>
+	) : (
+		<ul class="post-list">
+			{posts.map((post) => (
+				<li>
+					<a href={postPath(post)}>
+						<span class="title">{post.data.title}</span>
+						<span class="date">
+							<FormattedDate date={post.data.pubDate} />
+						</span>
+					</a>
+					<p class="description">{post.data.description}</p>
+				</li>
+			))}
+		</ul>
+	)
+}
+
+<style>
+	.post-list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.post-list li + li {
+		margin-top: 1.5rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid rgb(var(--gray-light));
+	}
+	.post-list a {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.25rem 1rem;
+		text-decoration: none;
+	}
+	.title {
+		color: rgb(var(--black));
+		font-family: var(--theme-font-heading);
+		font-size: 1.2rem;
+		letter-spacing: var(--theme-heading-spacing);
+	}
+	a:hover .title {
+		color: var(--theme-accent);
+	}
+	.date {
+		color: rgb(var(--gray));
+		font-size: 0.85rem;
+		white-space: nowrap;
+	}
+	.description {
+		margin: 0.25rem 0 0;
+		color: rgb(var(--gray));
+		font-size: 0.95rem;
+	}
+	.empty {
+		color: rgb(var(--gray));
+	}
+</style>

@@ -4,11 +4,23 @@
 
 ## 현재 상태 (2026-08-27)
 
-Astro blog 템플릿 스캐폴딩 완료(Astro 7.2.8, `@astrojs/react` 6.0.4 포함). `pnpm build` 통과. 아직 커밋 없음.
+MVP 발행 경로 구현 완료. `pnpm build` 통과. 커밋은 스캐폴딩(f7380b9)까지만 되어 있고 이후 작업은 미커밋.
 
+- 라우트: `/`(통합 홈) · `/dev` · `/dev/[slug]` · `/invest` · `/invest/[slug]` · `/about` · `/rss.xml` · sitemap
+- 데모 글 dev·invest 각 1편. 템플릿 기본 글 5편은 삭제했다.
 - `AGENTS.md`는 템플릿이 넣어준 Astro 일반 가이드다. 프로젝트 맥락은 이 파일이 기준.
 - `pnpm-workspace.yaml`에 `packages: - .` 를 추가했다. 없으면 pnpm 10에서 `pnpm add`가 "packages field missing or empty"로 실패한다.
-- 템플릿 기본 글 5편(`src/content/blog/`)과 플레이스홀더 이미지가 그대로 남아 있다. 데모 글 작성 시 정리한다.
+
+### 테마 구조
+
+`global.css`의 `:root`에 `--theme-*` 토큰을 두고 `[data-theme="dev"|"invest"]`가 그 값만 덮어쓴다. `BaseLayout.astro`가 `theme` prop으로 `<html data-theme>`을 찍는다. 홈의 카테고리 카드는 카드 자체에 `data-theme`을 걸어 색을 미리 보여준다.
+
+**한글 폰트 주의:** 템플릿 기본 Atkinson에는 한글 글리프가 없어 한글이 전부 시스템 폰트로 떨어졌다. 지금은 IBM Plex Sans KR(본문·제목) / IBM Plex Mono(dev 라벨) / Noto Serif KR(invest)로 교체했다.
+
+- 모노는 `--theme-font-label`로 분리해 **라틴 전용 자리에만** 쓴다. 한글이 섞이는 제목에 쓰면 한글이 시스템 모노로 떨어진다.
+- Astro는 자체 호스팅하면서 패밀리명에 해시를 붙인다(`IBM Plex Sans KR-8c7df719…`). `fallbacks`에 원래 이름을 적어봐야 매칭되지 않는다.
+- 폴백 배열에 한글 지원 폰트(`Apple SD Gothic Neo` 등)를 넣으면 그게 웹폰트보다 먼저 한글을 가로챈다.
+- 본문에 `word-break: keep-all`이 필요하다. 없으면 한글이 어절 중간에서 잘린다.
 
 ## ⚠️ 커밋 전 확인
 
