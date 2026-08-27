@@ -41,23 +41,41 @@ git config user.email   # 51505451+kimjong95@users.noreply.github.com 이어야 
 |---|---|
 | 도메인 | `consoleloghistory.blog` (가비아, 연 65,000원, 2026-08-27 등록) |
 | DNS | 가비아 네임서버 유지. apex A → `216.198.79.1`, `www` CNAME → `cname.vercel-dns.com` |
-| 호스팅 | Vercel. 이 저장소의 `main`에 푸시하면 자동 배포된다 (GitHub 연동) |
-| SSL | Let's Encrypt 자동 발급·갱신 |
+| 호스팅 | Vercel — **계정 `kimjong95` / 스코프 `kimjong95s-projects` / 프로젝트 `console-log-history`** |
+| 대표 주소 | apex. `www`는 308로 apex에 리다이렉트 |
+| SSL | Let's Encrypt 자동 발급·갱신. apex·www 각각 발급됨 |
 | 저장소 | https://github.com/kimjong95/console-log-history (public) |
 
-apex는 서비스 중이며 최신 커밋이 반영된다. `dev-blog`(Next.js)에서 도메인을 옮기는 작업은 끝났다.
+## ⚠️ Vercel 계정 주의
 
-**미해결:** `www` 인증서. DNS와 라우팅은 이미 정상이고(`https://www` → 307 → apex), Vercel 프로젝트에도 등록돼 있다. 다만 현재 인증서(2026-08-26 22:25 UTC 발급)의 SAN에 apex만 들어 있어, 브라우저가 `www`로 처음 접속하면 리다이렉트 전에 인증서 경고에서 막힌다. Vercel의 재발급을 기다리는 것 외에 할 일은 없다.
+**이 블로그는 `kimjong95` 계정에서만 운영한다.** 다른 계정(`mje807`)에도 Vercel이 있고, 2026-08-27에 도메인이 그쪽에 등록되는 바람에 반나절을 썼다. GitHub 계정 분리와 같은 이유로 여기도 갈라진다.
 
-확인 방법:
+증상과 원인:
+
+- Vercel의 Git Scope 목록은 **Vercel 계정에 연결된 GitHub 아이디**를 따른다. 브라우저에서 GitHub 계정을 바꿔도 목록은 바뀌지 않는다. `mje807` 계정에서는 `kimjong95` 소유 저장소가 public이어도 보이지 않는다.
+- 도메인은 프로젝트가 아니라 **계정에 귀속**된다. 프로젝트를 삭제해도 도메인은 계정 레벨에 남아, 다른 계정에서 추가하려 하면 "다른 Vercel 계정에 연결되어 있습니다"로 막힌다.
+- 계정 레벨 도메인 목록은 프로젝트 Settings가 아니라 대시보드 상단 **Domains** 탭에 있다 (`vercel.com/<scope>/~/domains`).
+
+계정이 꼬였을 때는 대시보드를 헤매지 말고 CLI로 확정하는 게 빠르다.
 
 ```bash
-echo | openssl s_client -connect www.consoleloghistory.blog:443 \
-  -servername www.consoleloghistory.blog 2>/dev/null \
-  | openssl x509 -noout -ext subjectAltName
+npx vercel whoami
+npx vercel teams ls
+npx vercel domains ls --scope <스코프>
+npx vercel domains rm <도메인> --scope <스코프> --yes
 ```
 
-SAN에 `DNS:www.consoleloghistory.blog`가 함께 나오면 해결된 것이다.
+프로젝트 도메인의 **리다이렉트 방향은 CLI로 못 바꾼다.** REST API를 쓴다 (토큰은 `~/Library/Application Support/com.vercel.cli/auth.json`).
+
+```bash
+curl -X PATCH -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"redirect":"consoleloghistory.blog","redirectStatusCode":308}' \
+  "https://api.vercel.com/v9/projects/console-log-history/domains/www.consoleloghistory.blog?teamId=kimjong95s-projects"
+```
+
+**`www`는 등록을 유지한다.** 대표 주소가 apex여도 `www`를 프로젝트에서 빼면 안 된다. DNS의 `www` CNAME은 그대로 Vercel을 가리키므로, 프로젝트에서 빠지는 순간 `www`로 들어온 방문자는 `DEPLOYMENT_NOT_FOUND`를 보게 된다. 308 리다이렉트로 남겨두는 것이 그 트래픽을 apex로 모으는 방법이다.
+
+**apex 소유권 인증:** 가비아 네임서버를 쓰는 한 apex는 A 레코드만으로 인증되지 않고 `_vercel` TXT(`vc-domain-verify=...`)가 필요하다. 서브도메인(`www`)은 CNAME으로 자동 인증된다. apex가 미인증이면 Vercel이 인증된 `www`를 대표로 잡아 **apex → www 방향으로 리다이렉트가 뒤집힌다.** TXT는 인증 후 삭제해도 된다.
 
 ## 확정된 결정
 
