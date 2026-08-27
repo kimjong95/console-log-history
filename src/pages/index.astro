@@ -57,7 +57,7 @@ const rest = allPosts.filter((post) => !previewed.has(post.id));
 	}
 	.doors {
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 		gap: 1.5rem;
 	}
 	.rest {
@@ -68,9 +68,6 @@ const rest = allPosts.filter((post) => !previewed.has(post.id));
 		font-size: 1.2rem;
 	}
 	@media (max-width: 720px) {
-		.doors {
-			grid-template-columns: 1fr;
-		}
 		.hero h1 {
 			font-size: 1.9rem;
 		}

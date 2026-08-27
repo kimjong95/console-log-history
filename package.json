@@ -9,7 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "sync:vault": "tsx scripts/sync-vault.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.8",
@@ -26,6 +27,8 @@
   },
   "devDependencies": {
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.5"
+    "@types/react-dom": "^19.2.5",
+    "gray-matter": "^4.0.3",
+    "tsx": "^4.23.12"
   }
 }

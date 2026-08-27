@@ -96,9 +96,25 @@ React Router v7은 별도 사이드 프로젝트로 다루고, 그 경험을 블
 
 헤더·네비게이션·레이아웃은 공통이고 컬러와 타이포만 교체한다(dev = 그린/모노스페이스, invest = 앰버/세리프 방향). 별개 사이트로 나누지 않는 이유는 애드센스가 사이트 단위 승인이고, 초기에는 도메인 신뢰도를 한 곳에 모으는 편이 유리하기 때문이다. 투자 쪽이 커지면 나중에 분리를 검토한다.
 
-**Obsidian vault 연동: 지금은 안 한다**
+**Obsidian vault 연동: 발행 전용 폴더 방식**
 
-vault(`~/Documents/Obsidian Vault`, md 약 175개)는 글감 자산이지만, 연동 파이프라인을 먼저 만들면 발행 경로 완성이 늦어진다. 데모 글을 저장소 `src/content/` 안에 직접 써서 발행 경로를 먼저 검증하고, 연동은 그 뒤에 별도로 설계한다. 투자 노트에 개인 포지션 등 비공개 정보가 섞일 수 있으므로, 나중에 붙일 때는 발행 전용 폴더 방식(`vault/blog/dev`, `vault/blog/invest`)을 기본안으로 둔다.
+vault(`~/Documents/Obsidian Vault`)의 `blog/<카테고리>/` 폴더만 발행한다. `pnpm sync:vault`가 단방향으로 복사하며, vault가 원본이고 저장소는 발행본이다. 저장소에 손으로 쓰는 글은 없다.
+
+```
+vault/blog/<카테고리>/글.md   (title, description만 직접 작성)
+  ↓  pnpm sync:vault
+src/content/blog/<slug>.md
+  ↓  git diff 확인 → 커밋 → 푸시 → 자동 배포
+```
+
+- `category`는 폴더명, `pubDate`는 `created`(없으면 파일 생성시각)에서 유도한다.
+- **투자 글의 면책 문구는 스크립트가 자동으로 넣는다** (`INVEST_DISCLAIMER`). 사람이 매번 적는 규칙은 언젠가 빠지므로 넣는 주체를 옮겼다.
+- **frontmatter는 화이트리스트**다(`title`, `description`, `draft`, `slug`, `created`, `updated`). vault에는 `participants`·`session_ids`·`source` 같은 회사·개인 메타데이터가 있어, 블랙리스트로 막으면 새 키가 생길 때마다 구멍이 난다. 버려진 키는 실행 시 콘솔에 나열된다.
+- `[[위키링크]]`는 대상이 발행 대상이면 링크로, 아니면 평문화하고 목록을 출력한다.
+- vault에서 사라진 글은 저장소에서도 지운다. 대상은 `.vault-sync.json` 매니페스트에 기록된 파일뿐이라, 매니페스트 밖의 파일은 건드리지 않는다.
+- vault 경로는 `VAULT_DIR` 환경변수로 바꿀 수 있다. 발행 폴더가 없으면 만들지 않고 실패한다 — 경로가 틀렸을 때 빈 폴더를 만들고 "0건"으로 조용히 끝나면 원인을 찾기 어렵다.
+
+**카테고리 추가는 `src/consts.ts`의 `CATEGORIES`에 한 줄이다.** 라우팅(`/[category]/`)·헤더 링크·스키마 enum·동기화 대상이 모두 여기서 유도된다. vault에 `blog/<키>` 폴더가 있는데 `CATEGORIES`에 없으면 동기화가 실패한다. 새 카테고리는 `global.css`에 `[data-theme]` 블록이 없으면 중립 테마 색으로 렌더링된다.
 
 **MVP 범위: 최소 발행 경로만**
 

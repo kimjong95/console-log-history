@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # playwright-mcp 출력
 .playwright-mcp/
+
+# vault 동기화 매니페스트는 추적하지 않는다 (로컬 상태)
+.vault-sync.json

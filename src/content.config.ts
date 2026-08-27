@@ -1,6 +1,11 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { CATEGORY_KEYS, type Category } from './consts';
+
+// 카테고리의 단일 출처는 consts.ts의 CATEGORIES다.
+// 여기에 따로 나열하면 라우팅·동기화와 어긋난다.
+const categoryEnum = z.enum(CATEGORY_KEYS as [Category, ...Category[]]);
 
 const blog = defineCollection({
 	// Load Markdown and MDX files in the `src/content/blog/` directory.
@@ -15,7 +20,7 @@ const blog = defineCollection({
 				pubDate: z.coerce.date(),
 				updatedDate: z.coerce.date().optional(),
 				heroImage: z.optional(image()),
-				category: z.enum(['dev', 'invest']),
+				category: categoryEnum,
 				draft: z.boolean().default(false),
 				// 투자 글에만 필수. 아래 superRefine에서 강제한다.
 				disclaimer: z.string().optional(),
